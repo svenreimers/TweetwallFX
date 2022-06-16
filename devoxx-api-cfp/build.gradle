@@ -30,7 +30,7 @@ dependencies {
 
     runtimeOnly group: 'org.glassfish.jersey.core', name: 'jersey-client', version: '3.0.4'
     runtimeOnly group: 'org.glassfish.jersey.inject', name: 'jersey-hk2', version: '3.0.4'
-    runtimeOnly group: 'org.glassfish.jersey.media', name: 'jersey-media-json-jackson', version: '3.0.4'
+    runtimeOnly group: 'org.glassfish.jersey.media', name: 'jersey-media-json-jackson', version: '3.0.5'
 }
 
 tasks.named('spotbugsMain') { ignoreFailures = true }
