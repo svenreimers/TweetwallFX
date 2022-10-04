@@ -41,7 +41,6 @@ import org.tweetwallfx.config.ConfigurationConverter;
  */
 public record CFPClientSettings(
         String baseUri,
-        String eventId,
         String votingResultsUri) {
 
     /**
@@ -52,7 +51,6 @@ public record CFPClientSettings(
 
     public CFPClientSettings   {
         Objects.requireNonNull(baseUri, "baseUri must not be null!");
-        Objects.requireNonNull(eventId, "eventId must not be null!");
     }
 
     /**

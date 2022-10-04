@@ -58,5 +58,7 @@ includeWithName ':devoxx-cfp-test', 'tweetwallfx-devoxx-cfp-test'
 
 includeWithName ':generic2d', 'tweetwallfx-generic2d'
 
+includeWithName ':examples', 'tweetwallfx-examples'
+
 // disabled subproject for future reference
 //includeWithName ':3d', 'tweetwallfx-3d'

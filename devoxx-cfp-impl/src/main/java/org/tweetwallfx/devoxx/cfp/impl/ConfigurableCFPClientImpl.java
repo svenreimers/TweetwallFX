@@ -55,7 +55,7 @@ public class ConfigurableCFPClientImpl implements CFPClient {
                 CFPClientSettings.class);
 
         baseUri = cfpClientSettings.baseUri();
-        eventBaseUri = baseUri + "/conferences/" + cfpClientSettings.eventId();
+        eventBaseUri = baseUri + "/event";
         votingResultsUri = cfpClientSettings.votingResultsUri();
     }
 
@@ -71,53 +71,53 @@ public class ConfigurableCFPClientImpl implements CFPClient {
 
     @Override
     public Optional<Events> getEvents() {
-        return readOptionalFrom(baseUri + "/conferences", Events.class);
+        return Optional.empty();
     }
 
     @Override
     public Optional<ProposalTypes> getProposalTypes() {
-        return readOptionalFrom(eventBaseUri + "/proposalTypes", ProposalTypes.class);
+        return readOptionalFrom(baseUri + "/proposalTypes", ProposalTypes.class);
     }
 
     @Override
     public Optional<Rooms> getRooms() {
-        return readOptionalFrom(eventBaseUri + "/rooms/", Rooms.class);
+        return readOptionalFrom(baseUri + "/rooms/", Rooms.class);
     }
 
     @Override
     public Optional<Schedule> getSchedule(final String day) {
-        return readOptionalFrom(eventBaseUri + "/schedules/" + day, Schedule.class);
+        return readOptionalFrom(baseUri + "/schedules/" + day, Schedule.class);
     }
 
     @Override
     public Optional<Schedule> getSchedule(final String day, final String room) {
-        return readOptionalFrom(eventBaseUri + "/rooms/" + room + "/" + day, Schedule.class);
+        return readOptionalFrom(baseUri + "/rooms/" + room + "/" + day, Schedule.class);
     }
 
     @Override
     public Optional<Schedules> getSchedules() {
-        return readOptionalFrom(eventBaseUri + "/schedules/", Schedules.class);
+        return readOptionalFrom(baseUri + "/schedules/", Schedules.class);
     }
 
     @Override
     public Optional<Speaker> getSpeaker(final String speakerId) {
-        return readOptionalFrom(eventBaseUri + "/speakers/" + speakerId, Speaker.class);
+        return readOptionalFrom(baseUri + "/speakers/" + speakerId, Speaker.class);
     }
 
     @Override
     public List<Speaker> getSpeakers() {
-        return readOptionalFrom(eventBaseUri + "/speakers/", new GenericType<List<Speaker>>() {
+        return readOptionalFrom(baseUri + "/speakers/", new GenericType<List<Speaker>>() {
         }).orElse(Collections.emptyList());
     }
 
     @Override
     public Optional<Talk> getTalk(final String talkId) {
-        return readOptionalFrom(eventBaseUri + "/talks/" + talkId, Talk.class);
+        return readOptionalFrom(baseUri + "/talks/" + talkId, Talk.class);
     }
 
     @Override
     public Optional<Tracks> getTracks() {
-        return readOptionalFrom(eventBaseUri + "/tracks", Tracks.class);
+        return readOptionalFrom(baseUri + "/tracks", Tracks.class);
     }
 
     @Override

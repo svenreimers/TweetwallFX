@@ -31,6 +31,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import org.apache.logging.log4j.LogManager;
 import org.tweetwallfx.devoxx.api.cfp.client.CFPClient;
 import org.tweetwallfx.devoxx.api.cfp.client.Schedule;
 import org.tweetwallfx.devoxx.api.cfp.client.ScheduleSlot;
@@ -57,16 +58,20 @@ public class ScheduleDataProvider implements DataProvider, DataProvider.Schedule
 
     @Override
     public void run() {
-        CFPClient.getClient()
-                .getSchedule(Optional
-                        .ofNullable(System.getProperty("org.tweetwallfx.scheduledata.day"))
-                        .orElseGet(()
-                                -> LocalDateTime.now(ZoneId.systemDefault())
-                                .getDayOfWeek()
-                                .getDisplayName(TextStyle.FULL, Locale.ENGLISH)
-                                .toLowerCase(Locale.ENGLISH)))
-                .map(Schedule::getSlots)
-                .ifPresent(slots -> scheduleSlots = slots);
+        try {
+            CFPClient.getClient()
+                    .getSchedule(Optional
+                            .ofNullable(System.getProperty("org.tweetwallfx.scheduledata.day"))
+                            .orElseGet(()
+                                    -> LocalDateTime.now(ZoneId.systemDefault())
+                                    .getDayOfWeek()
+                                    .getDisplayName(TextStyle.FULL, Locale.ENGLISH)
+                                    .toLowerCase(Locale.ENGLISH)))
+                    .map(Schedule::getSlots)
+                    .ifPresent(slots -> scheduleSlots = slots);
+        } catch (Exception ex) {
+            LogManager.getLogger().error("Exception occurred constructing CFP client instance: ", ex);
+        }
     }
 
     public List<SessionData> getFilteredSessionData() {
