@@ -25,8 +25,10 @@ package org.tweetwallfx.conference.stepengine.steps;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.OffsetTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Collection;
@@ -235,20 +237,30 @@ public class ShowSchedule implements Step {
         bpTitle.setBottom(title);
 
         var sessionProgress = new ProgressBar();
-        Instant instantNow = Instant.now();
-        var alreadyDone =java.time.Duration.between(sessionData.beginTime, instantNow);
-        var fullTime = java.time.Duration.between(sessionData.beginTime, sessionData.endTime);
-        
-        var progress = (double) alreadyDone.getSeconds() / (double) fullTime.getSeconds();
-        
-        sessionProgress.setProgress(progress);
+        sessionProgress.setPrefSize((config.width - config.sessionHGap) / 2.0 - 50, 8);
+        Instant now = OffsetTime.parse(System.getProperty("org.tweetwallfx.scheduledata.now",
+                OffsetTime.now(ZoneId.systemDefault())
+                        .format(HOUR_MINUTES)))
+                        .toLocalTime()
+                        .atDate(LocalDate.now(ZoneId.systemDefault())).toInstant(ZoneOffset.UTC);
+        if (now.isAfter(sessionData.beginTime) && config.showProgress) {
+            var alreadyDone =java.time.Duration.between(sessionData.beginTime, now);
+            var fullTime = java.time.Duration.between(sessionData.beginTime, sessionData.endTime);
+
+            var progress = (double) alreadyDone.getSeconds() / (double) fullTime.getSeconds();
+            sessionProgress.setProgress(progress);
+        } else {
+            sessionProgress.setProgress(0);         
+        }
                         
         
         var bpSessionBottomPane = new BorderPane();
         bpSessionBottomPane.getStyleClass().add("sessionBottomPane");
         bpSessionBottomPane.setRight(trackImageView);
         bpSessionBottomPane.setCenter(bpTitle);
-        bpSessionBottomPane.setBottom(sessionProgress);
+        if (sessionProgress.getProgress() > 0) {
+            bpSessionBottomPane.setBottom(sessionProgress);
+        }
 
         var bpSessionPane = new BorderPane();
         bpSessionPane.getStyleClass().add("scheduleSession");
@@ -300,5 +312,6 @@ public class ShowSchedule implements Step {
         public double sessionHeight = 200;
         public boolean showTrackAvatar = true;
         public boolean circularAvatar = true;
+        public boolean showProgress = false;
     }
 }
