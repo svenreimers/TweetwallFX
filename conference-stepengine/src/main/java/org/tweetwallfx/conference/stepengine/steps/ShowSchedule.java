@@ -39,6 +39,7 @@ import javafx.geometry.Pos;
 import javafx.scene.CacheHint;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -233,10 +234,21 @@ public class ShowSchedule implements Step {
         bpTitle.getStyleClass().add("titlePane");
         bpTitle.setBottom(title);
 
+        var sessionProgress = new ProgressBar();
+        Instant instantNow = Instant.now();
+        var alreadyDone =java.time.Duration.between(sessionData.beginTime, instantNow);
+        var fullTime = java.time.Duration.between(sessionData.beginTime, sessionData.endTime);
+        
+        var progress = (double) alreadyDone.getSeconds() / (double) fullTime.getSeconds();
+        
+        sessionProgress.setProgress(progress);
+                        
+        
         var bpSessionBottomPane = new BorderPane();
         bpSessionBottomPane.getStyleClass().add("sessionBottomPane");
         bpSessionBottomPane.setRight(trackImageView);
         bpSessionBottomPane.setCenter(bpTitle);
+        bpSessionBottomPane.setBottom(sessionProgress);
 
         var bpSessionPane = new BorderPane();
         bpSessionPane.getStyleClass().add("scheduleSession");
